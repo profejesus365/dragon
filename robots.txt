@@ -1,0 +1,4 @@
+# El portal muestra información académica de estudiantes.
+# No debe aparecer en buscadores.
+User-agent: *
+Disallow: /

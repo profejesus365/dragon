@@ -1,0 +1,39 @@
+# ============================================================================
+#  htaccess.ejemplo · Portal del Guardián
+#  Renombra este archivo como  .htaccess  al subir el portal a un servidor
+#  Apache. Protege la carpeta con contraseña y evita que se descarguen los
+#  datos por curiosidad.
+#
+#  1. Crea el archivo de contraseñas (fuera de la carpeta pública):
+#       htpasswd -c /ruta/segura/.htpasswd guardianes
+#  2. Ajusta abajo la ruta de AuthUserFile.
+#  3. Sube el portal y renombra este archivo a .htaccess
+# ============================================================================
+
+AuthType Basic
+AuthName "Portal del Guardian - Cronicas de los 12 Dragones"
+AuthUserFile /ruta/segura/.htpasswd
+Require valid-user
+
+# Sin listados de carpetas
+Options -Indexes
+
+# Las herramientas y los archivos de trabajo no se sirven
+<FilesMatch "\.(py|bat|md|ejemplo)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "no-referrer"
+    # Los datos cambian cada vez que el docente exporta: sin caché.
+    <FilesMatch "\.(js|json)$">
+        Header set Cache-Control "no-store, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_mime.c>
+    AddType image/webp .webp
+    AddCharset UTF-8 .html .css .js .json
+</IfModule>

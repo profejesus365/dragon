@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Academia de Dragones · Crónicas de los 12 Dragones. Portal del guardián, panel del tutor, recursos y exámenes.">
+<meta name="theme-color" content="#070c17">
+<title>Academia de Dragones · Crónicas de los 12 Dragones</title>
+
+<link rel="icon" href="assets/dragones/elementum_t.webp">
+<link rel="apple-touch-icon" href="assets/dragones/elementum_t.webp">
+
+<!-- Tipografías (si no hay internet, caen a Georgia / system-ui) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap">
+
+<!-- Iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<!-- Utilidades Tailwind (sin preflight: el diseño base vive en /css) -->
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+  if (window.tailwind) {
+    tailwind.config = {
+      corePlugins: { preflight: false },
+      theme: { extend: { fontFamily: { titulo: ['Cinzel', 'Georgia', 'serif'] } } }
+    };
+  }
+</script>
+
+<!-- Gráficas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- Descarga en PNG de escarapelas y boletines -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- Descarga en PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Lectura y escritura de Excel (listados y reportes) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- Diseño propio: funciona aunque los CDN no carguen -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/portada.css">
+<link rel="stylesheet" href="css/panel.css">
+<link rel="stylesheet" href="css/tutor.css">
+<link rel="stylesheet" href="css/documentos.css">
+<link rel="stylesheet" href="css/imprimir.css" media="print">
+</head>
+
+<body>
+
+<!-- ====================================================================== -->
+<!-- Pantalla de carga                                                      -->
+<!-- ====================================================================== -->
+<div id="cargando" class="pantalla-carga">
+  <div class="carga-sello">🐉</div>
+  <p class="carga-texto">Despertando a los guardianes…</p>
+</div>
+
+<noscript>
+  <div class="sin-js">
+    <h1>Academia de Dragones</h1>
+    <p>Esta página necesita JavaScript activado. Actívalo en la configuración
+       del navegador y vuelve a cargarla.</p>
+  </div>
+</noscript>
+
+<!-- ====================================================================== -->
+<!-- 1. Portada · bienvenida                                                -->
+<!-- ====================================================================== -->
+<section id="portada" class="portada oculto">
+  <div class="portada-fondo" aria-hidden="true">
+    <span class="orbe orbe-1"></span>
+    <span class="orbe orbe-2"></span>
+    <span class="orbe orbe-3"></span>
+    <div class="rejilla-portada"></div>
+  </div>
+
+  <div class="portada-caja">
+    <aside class="portada-arte" aria-hidden="true">
+      <img id="portada-dragon" src="assets/dragones/elementum.webp" alt="">
+      <div class="portada-arte-halo"></div>
+      <div class="portada-arte-pie">
+        <strong id="portada-dragon-nombre">ELEMENTUM</strong>
+        <span id="portada-dragon-poder">Gran Dragón Elemental</span>
+      </div>
+    </aside>
+
+    <div class="portada-panel">
+      <header class="portada-marca">
+        <div class="marca-sello">🐉</div>
+        <div>
+          <p class="marca-linea">Crónicas de los 12 Dragones</p>
+          <h1 class="marca-titulo">Academia de Dragones</h1>
+        </div>
+      </header>
+
+      <p class="portada-bienvenida">
+        Bienvenido a la <strong>Academia de Dragones</strong>. Aquí cada misión que
+        superas en clase recupera un fragmento del poder perdido de Elemoria.
+        Reunámoslos todos y despertemos juntos a <strong>Elementum</strong>,
+        el Gran Dragón Elemental.
+      </p>
+
+      <button type="button" class="boton boton-oro boton-ancho boton-grande" data-accion="comenzar">
+        <i class="fa-solid fa-dragon" aria-hidden="true"></i>
+        <span>Comenzar aventura</span>
+      </button>
+
+      <footer class="portada-pie">
+        <span id="portada-institucion">—</span>
+        <span class="portada-version">Crónicas de los 12 Dragones</span>
+      </footer>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- 2. Inicio · narrativa y accesos                                         -->
+<!-- ====================================================================== -->
+<section id="inicio" class="inicio oculto">
+  <div class="portada-fondo" aria-hidden="true">
+    <span class="orbe orbe-1"></span>
+    <span class="orbe orbe-2"></span>
+    <div class="rejilla-portada"></div>
+  </div>
+
+  <div class="inicio-caja">
+
+    <aside class="inicio-accesos">
+      <header class="marca">
+        <div class="marca-sello">🐉</div>
+        <div class="marca-textos">
+          <p class="marca-linea">Crónicas de los 12 Dragones</p>
+          <p class="marca-titulo">Academia</p>
+        </div>
+      </header>
+
+      <nav class="accesos" aria-label="Accesos de la Academia">
+        <button type="button" class="acceso" data-acceso="tutor">
+          <span class="acceso-icono"><i class="fa-solid fa-hat-wizard" aria-hidden="true"></i></span>
+          <span class="acceso-textos">
+            <strong>Tutor de Dragones</strong>
+            <small>Panel del maestro · requiere código</small>
+          </span>
+          <i class="fa-solid fa-chevron-right acceso-flecha" aria-hidden="true"></i>
+        </button>
+
+        <button type="button" class="acceso" data-acceso="guardian">
+          <span class="acceso-icono"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
+          <span class="acceso-textos">
+            <strong>Guardianes del Dragón</strong>
+            <small>Panel del estudiante · código personal</small>
+          </span>
+          <i class="fa-solid fa-chevron-right acceso-flecha" aria-hidden="true"></i>
+        </button>
+
+        <button type="button" class="acceso" data-acceso="recursos">
+          <span class="acceso-icono"><i class="fa-solid fa-book-open-reader" aria-hidden="true"></i></span>
+          <span class="acceso-textos">
+            <strong>Recursos didácticos</strong>
+            <small>Material de apoyo para la clase</small>
+          </span>
+          <i class="fa-solid fa-arrow-up-right-from-square acceso-flecha" aria-hidden="true"></i>
+        </button>
+
+        <button type="button" class="acceso" data-acceso="examenes">
+          <span class="acceso-icono"><i class="fa-solid fa-file-pen" aria-hidden="true"></i></span>
+          <span class="acceso-textos">
+            <strong>Exámenes</strong>
+            <small>Portal de pruebas de la institución</small>
+          </span>
+          <i class="fa-solid fa-arrow-up-right-from-square acceso-flecha" aria-hidden="true"></i>
+        </button>
+
+        <button type="button" class="acceso" data-acceso="ejes">
+          <span class="acceso-icono"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i></span>
+          <span class="acceso-textos">
+            <strong>Ejes tem&aacute;ticos</strong>
+            <small>Lo que veremos en cada periodo</small>
+          </span>
+          <i class="fa-solid fa-arrow-up-right-from-square acceso-flecha" aria-hidden="true"></i>
+        </button>
+
+        <button type="button" class="acceso" data-acceso="gamificacion">
+          <span class="acceso-icono"><i class="fa-solid fa-gamepad" aria-hidden="true"></i></span>
+          <span class="acceso-textos">
+            <strong>Gamificaci&oacute;n</strong>
+            <small>Reglas del juego y retos</small>
+          </span>
+          <i class="fa-solid fa-arrow-up-right-from-square acceso-flecha" aria-hidden="true"></i>
+        </button>
+      </nav>
+
+      <div class="accesos-pie">
+        <button type="button" class="icono-boton" data-accion="tema" aria-label="Cambiar tema" title="Cambiar tema claro / oscuro">
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        </button>
+        <span id="inicio-institucion" class="firma">—</span>
+      </div>
+    </aside>
+
+    <main class="inicio-narrativa">
+      <div class="narrativa-arte" aria-hidden="true">
+        <img src="assets/dragones/elementum.webp" alt="">
+      </div>
+
+      <p class="narrativa-antetitulo">La leyenda de Elemoria</p>
+      <h1 class="narrativa-titulo">El despertar de <span>Elementum</span></h1>
+
+      <div class="narrativa-texto">
+        <p>
+          Hace siglos, el mundo de <strong>Elemoria</strong> estuvo protegido por
+          <strong>doce Dragones Guardianes</strong>, y cada uno custodiaba un elemento
+          primordial. La <em>Gran Fragmentación</em> dispersó su poder por todos los
+          rincones, y desde entonces solo una nueva generación de guardianes
+          —<strong>nuestros estudiantes</strong>— puede reunirlo de nuevo.
+        </p>
+        <p>
+          Cada misión que completas en clase es mucho más que una nota: es un
+          <strong>fragmento de poder</strong> que regresa a su dragón. Al dominar la
+          Tierra, el Agua, el Fuego y el Aire, los guardianes reúnen la fuerza que hace
+          falta para el despertar final de <strong>Elementum</strong>, el Gran Dragón
+          Elemental.
+        </p>
+      </div>
+
+      <ul class="narrativa-elementos">
+        <li style="--acento:var(--tierra)"><i class="fa-solid fa-mountain" aria-hidden="true"></i> Tierra · Periodo 1</li>
+        <li style="--acento:var(--agua)"><i class="fa-solid fa-droplet" aria-hidden="true"></i> Agua · Periodo 2</li>
+        <li style="--acento:var(--fuego)"><i class="fa-solid fa-fire" aria-hidden="true"></i> Fuego · Periodo 3</li>
+        <li style="--acento:var(--aire)"><i class="fa-solid fa-wind" aria-hidden="true"></i> Aire · Periodo 4</li>
+      </ul>
+
+      <aside class="nota-docente">
+        <div class="nota-docente-icono"><i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i></div>
+        <div>
+          <p><strong>¿Eres docente?</strong> Si te interesan los recursos de gamificación
+             o las aplicaciones educativas para computador y celular con las que llevo el
+             registro de notas, la asistencia y otros procesos de aula, escríbeme:</p>
+          <p class="nota-docente-contacto">
+            <a href="mailto:profejesus365@gmail.com"><i class="fa-solid fa-envelope" aria-hidden="true"></i> profejesus365@gmail.com</a>
+            <a href="https://wa.me/573003813984" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> +57 300 381 3984</a>
+          </p>
+        </div>
+      </aside>
+    </main>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- 3. Panel del estudiante                                                -->
+<!-- ====================================================================== -->
+<div id="app" class="app oculto">
+
+  <aside class="lateral" id="lateral">
+    <div class="marca">
+      <div class="marca-sello">🐉</div>
+      <div class="marca-textos">
+        <p class="marca-linea">Guardianes del Dragón</p>
+        <p class="marca-titulo">Mi portal</p>
+      </div>
+      <button type="button" class="icono-boton solo-movil" data-accion="cerrar-menu" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <nav class="nav" id="nav" aria-label="Secciones del portal">
+      <a class="nav-item" href="#/perfil"      data-vista="perfil"><i class="fa-solid fa-id-badge" aria-hidden="true"></i><span>Mi perfil</span></a>
+      <a class="nav-item" href="#/guardianes"  data-vista="guardianes"><i class="fa-solid fa-dragon" aria-hidden="true"></i><span>Los Guardianes</span></a>
+      <a class="nav-item" href="#/estadisticas" data-vista="estadisticas"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Estadísticas</span></a>
+      <a class="nav-item" href="#/comparativa" data-vista="comparativa"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>Comparativa</span></a>
+      <a class="nav-item" href="#/ranking"     data-vista="ranking"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>Ranking</span></a>
+      <a class="nav-item" href="#/boletines"   data-vista="boletines"><i class="fa-solid fa-scroll" aria-hidden="true"></i><span>Boletines</span></a>
+      <a class="nav-item" href="#/escarapela"  data-vista="escarapela"><i class="fa-solid fa-address-card" aria-hidden="true"></i><span>Escarapela</span></a>
+    </nav>
+
+    <div class="lateral-pie">
+      <div class="mini-perfil" id="mini-perfil"></div>
+      <button type="button" class="boton boton-fantasma boton-ancho" data-accion="salir">
+        <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+        <span>Salir</span>
+      </button>
+      <p class="firma" id="firma-datos">—</p>
+    </div>
+  </aside>
+
+  <div class="velo" id="velo" hidden></div>
+
+  <div class="principal">
+    <header class="cabecera">
+      <button type="button" class="icono-boton solo-movil" data-accion="abrir-menu" aria-label="Abrir menú">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+
+      <div class="cabecera-titulo">
+        <h1 id="titulo-vista">Mi perfil</h1>
+        <p id="subtitulo-vista" class="cabecera-sub">—</p>
+      </div>
+
+      <div class="cabecera-acciones">
+        <span id="marca-demo" class="pastilla pastilla-aviso oculto" title="Los datos mostrados no son reales">
+          <i class="fa-solid fa-flask" aria-hidden="true"></i> Datos de ejemplo
+        </span>
+        <button type="button" class="icono-boton" data-accion="tema" aria-label="Cambiar tema" title="Cambiar tema claro / oscuro">
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="chip-perfil" data-accion="ir-perfil" id="chip-perfil"></button>
+      </div>
+    </header>
+
+    <main id="vista" class="vista" tabindex="-1"></main>
+  </div>
+
+  <nav class="nav-movil" aria-label="Secciones">
+    <a class="nav-movil-item" href="#/perfil"       data-vista="perfil"><i class="fa-solid fa-id-badge" aria-hidden="true"></i><span>Perfil</span></a>
+    <a class="nav-movil-item" href="#/guardianes"   data-vista="guardianes"><i class="fa-solid fa-dragon" aria-hidden="true"></i><span>Dragones</span></a>
+    <a class="nav-movil-item" href="#/estadisticas" data-vista="estadisticas"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Datos</span></a>
+    <a class="nav-movil-item" href="#/ranking"      data-vista="ranking"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>Ranking</span></a>
+    <a class="nav-movil-item" href="#/escarapela"   data-vista="escarapela"><i class="fa-solid fa-address-card" aria-hidden="true"></i><span>Carné</span></a>
+  </nav>
+</div>
+
+<!-- ====================================================================== -->
+<!-- 4. Panel del tutor                                                     -->
+<!-- ====================================================================== -->
+<div id="tutor" class="app app-tutor oculto">
+
+  <aside class="lateral" id="lateral-tutor">
+    <div class="marca">
+      <div class="marca-sello marca-sello-tutor">🧙</div>
+      <div class="marca-textos">
+        <p class="marca-linea">Tutor de Dragones</p>
+        <p class="marca-titulo">Panel del maestro</p>
+      </div>
+      <button type="button" class="icono-boton solo-movil" data-accion="cerrar-menu" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <nav class="nav" id="nav-tutor" aria-label="Secciones del panel del tutor">
+      <a class="nav-item" href="#/tutor/panel"        data-vista="panel"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Panel</span></a>
+      <a class="nav-item" href="#/tutor/estudiantes"  data-vista="estudiantes"><i class="fa-solid fa-users" aria-hidden="true"></i><span>Estudiantes</span></a>
+      <a class="nav-item" href="#/tutor/calificaciones" data-vista="calificaciones"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i><span>Calificaciones</span></a>
+      <a class="nav-item" href="#/tutor/estadisticas" data-vista="estadisticas"><i class="fa-solid fa-chart-column" aria-hidden="true"></i><span>Estadísticas</span></a>
+      <a class="nav-item" href="#/tutor/ranking"      data-vista="ranking"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>Ranking</span></a>
+      <a class="nav-item" href="#/tutor/boletines"    data-vista="boletines"><i class="fa-solid fa-scroll" aria-hidden="true"></i><span>Informes y boletines</span></a>
+      <a class="nav-item" href="#/tutor/escarapelas"  data-vista="escarapelas"><i class="fa-solid fa-address-card" aria-hidden="true"></i><span>Escarapelas</span></a>
+      <a class="nav-item" href="#/tutor/institucion"  data-vista="institucion"><i class="fa-solid fa-school" aria-hidden="true"></i><span>Institución</span></a>
+      <a class="nav-item" href="#/tutor/respaldos"    data-vista="respaldos"><i class="fa-solid fa-database" aria-hidden="true"></i><span>Respaldos</span></a>
+    </nav>
+
+    <div class="lateral-pie">
+      <div id="estado-guardado" class="estado-guardado" title="Los cambios se guardan solos">
+        <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+        <span>Listo</span>
+      </div>
+      <button type="button" class="boton boton-fantasma boton-ancho" data-accion="salir-tutor">
+        <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+        <span>Cerrar sesión</span>
+      </button>
+      <p class="firma" id="firma-tutor">—</p>
+    </div>
+  </aside>
+
+  <div class="velo" id="velo-tutor" hidden></div>
+
+  <div class="principal">
+    <header class="cabecera">
+      <button type="button" class="icono-boton solo-movil" data-accion="abrir-menu" aria-label="Abrir menú">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+
+      <div class="cabecera-titulo">
+        <h1 id="titulo-tutor">Panel</h1>
+        <p id="subtitulo-tutor" class="cabecera-sub">—</p>
+      </div>
+
+      <div class="cabecera-acciones">
+        <span id="pastilla-almacen" class="pastilla" title="Dónde se están guardando los datos"></span>
+        <button type="button" class="icono-boton" data-accion="tema" aria-label="Cambiar tema" title="Cambiar tema claro / oscuro">
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="icono-boton" data-accion="ir-inicio" aria-label="Volver al inicio" title="Volver al inicio">
+          <i class="fa-solid fa-house" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+
+    <main id="vista-tutor" class="vista" tabindex="-1"></main>
+  </div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- Modal y avisos flotantes                                               -->
+<!-- ====================================================================== -->
+<div id="modal" class="modal oculto" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+  <div class="modal-velo" data-accion="cerrar-modal"></div>
+  <div class="modal-caja" role="document">
+    <header class="modal-cabecera">
+      <h2 id="modal-titulo">—</h2>
+      <button type="button" class="icono-boton" data-accion="cerrar-modal" aria-label="Cerrar">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </header>
+    <div id="modal-cuerpo" class="modal-cuerpo"></div>
+    <footer id="modal-pie" class="modal-pie"></footer>
+  </div>
+</div>
+
+<div id="tostadas" class="tostadas" aria-live="polite" aria-atomic="false"></div>
+
+<!-- ====================================================================== -->
+<!-- Datos y lógica                                                         -->
+<!-- ====================================================================== -->
+<script src="data/datos.js"></script>
+<script src="data/avisos.js"></script>
+
+<script src="js/nucleo.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/motor.js"></script>
+<script src="js/base.js"></script>
+<script src="js/graficas.js"></script>
+<script src="js/piezas.js"></script>
+<script src="js/vistas.js"></script>
+<script src="js/documentos.js"></script>
+<script src="js/tutor.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+/* ==========================================================================
+   tutor.css · Panel del Tutor de Dragones
+   Reutiliza las piezas del panel del estudiante (tarjetas, KPI, barras) y
+   añade lo propio de administrar: formularios, tablas editables, captura de
+   notas, importación y respaldos.
+   ========================================================================== */
+
+.app-tutor .marca-sello-tutor {
+  background: linear-gradient(145deg, rgba(167, 139, 250, .3), rgba(212, 175, 55, .2));
+}
+.app-tutor .nav-item.activo {
+  background: linear-gradient(90deg, rgba(167, 139, 250, .18), transparent);
+  color: var(--violeta);
+}
+.app-tutor .nav-item.activo::before { background: var(--violeta); box-shadow: 0 0 22px rgba(167, 139, 250, .5); }
+
+/* --- Estado de guardado -------------------------------------------------- */
+.estado-guardado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: var(--r-completo);
+  border: 1px solid var(--borde-suave);
+  background: var(--panel-2);
+  font-size: 12.5px;
+  color: var(--tenue);
+  transition: color var(--trans), border-color var(--trans);
+}
+.estado-guardado.guardando { color: var(--runas); border-color: rgba(245, 158, 11, .4); }
+.estado-guardado.ok { color: var(--superior); border-color: rgba(52, 211, 153, .4); }
+.estado-guardado.local { color: var(--cian); border-color: rgba(34, 211, 238, .35); }
+.estado-guardado.error { color: var(--bajo); border-color: rgba(248, 113, 113, .45); }
+
+/* --- Barra de herramientas ---------------------------------------------- */
+.barra-tareas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.barra-tareas .filtros { flex: 1; min-width: 0; }
+.barra-tareas .tarjeta-acciones { flex: none; }
+
+.filtro input.control[type="search"] { min-width: 190px; }
+.filtro select.control { min-width: 140px; }
+
+/* --- Formularios --------------------------------------------------------- */
+.formulario { display: grid; gap: 14px; }
+.formulario-fila { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.campo textarea {
+  width: 100%;
+  min-height: 84px;
+  padding: 11px 13px;
+  border-radius: var(--r-s);
+  border: 1px solid var(--borde);
+  background: var(--panel-2);
+  color: var(--texto);
+  font-family: inherit;
+  resize: vertical;
+}
+.campo textarea:focus {
+  outline: none;
+  border-color: var(--oro);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, .18);
+}
+.campo-ayuda { font-size: 12px; color: var(--tenue); }
+.campo-error { font-size: 12.5px; color: var(--bajo); }
+
+.interruptor { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+.interruptor input { width: 18px; height: 18px; accent-color: var(--oro); cursor: pointer; }
+
+/* --- Tablas de administración ------------------------------------------- */
+.tabla-admin { min-width: 760px; }
+.tabla-admin td { vertical-align: middle; }
+.tabla-admin .acciones-fila { display: flex; gap: 6px; justify-content: flex-end; }
+.boton-icono {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  border: 1px solid var(--borde);
+  background: var(--panel-2);
+  color: var(--suave);
+  cursor: pointer;
+  font-size: 13px;
+  transition: color var(--trans), border-color var(--trans), transform var(--trans);
+}
+.boton-icono:hover { color: var(--oro); border-color: var(--oro); transform: translateY(-1px); }
+.boton-icono.peligro:hover { color: var(--bajo); border-color: var(--bajo); }
+
+tr.inactivo td { opacity: .5; }
+.etiqueta-genero {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--panel-3);
+  color: var(--suave);
+}
+.etiqueta-genero.F { background: rgba(244, 114, 182, .18); color: #f472b6; }
+.etiqueta-genero.M { background: rgba(96, 165, 250, .18); color: #60a5fa; }
+
+/* --- Captura de notas ---------------------------------------------------- */
+.tabla-notas { min-width: 860px; }
+.tabla-notas th.nota, .tabla-notas td.nota { width: 92px; text-align: center; }
+.tabla-notas input.nota-campo {
+  width: 74px;
+  padding: 7px 8px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  background: var(--panel-2);
+  color: var(--texto);
+  transition: border-color var(--trans), background var(--trans);
+}
+.tabla-notas input.nota-campo:focus {
+  outline: none;
+  border-color: var(--oro);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, .18);
+}
+.tabla-notas input.nota-campo.superior { border-color: rgba(52, 211, 153, .5); }
+.tabla-notas input.nota-campo.alto     { border-color: rgba(96, 165, 250, .5); }
+.tabla-notas input.nota-campo.basico   { border-color: rgba(251, 191, 36, .5); }
+.tabla-notas input.nota-campo.bajo     { border-color: rgba(248, 113, 113, .55); }
+.tabla-notas input.obs-campo {
+  width: 100%;
+  min-width: 180px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  background: var(--panel-2);
+  color: var(--texto);
+  font-size: 13px;
+}
+.tabla-notas td.promedio { font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
+
+.cabecera-mision {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--r-m);
+  border: 1px solid var(--borde-suave);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--acento, var(--oro)) 14%, var(--panel)), var(--panel));
+}
+.cabecera-mision h3 { font-size: 17px; }
+.cabecera-mision p { font-size: 13px; color: var(--tenue); }
+
+/* --- Escala de calificación --------------------------------------------- */
+.escala { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.escala-item {
+  display: grid;
+  gap: 2px;
+  padding: 10px 13px;
+  border-radius: var(--r-s);
+  border: 1px solid currentColor;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+.escala-item strong { font-size: 13px; letter-spacing: .08em; }
+.escala-item span { font-size: 12px; color: var(--suave); }
+
+/* --- Importación --------------------------------------------------------- */
+.zona-soltar {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 26px 20px;
+  border-radius: var(--r-m);
+  border: 2px dashed var(--borde);
+  background: var(--panel-2);
+  text-align: center;
+  transition: border-color var(--trans), background var(--trans);
+  cursor: pointer;
+}
+.zona-soltar:hover, .zona-soltar.encima { border-color: var(--oro); background: rgba(212, 175, 55, .07); }
+.zona-soltar i { font-size: 30px; color: var(--oro); }
+.zona-soltar small { color: var(--tenue); font-size: 12.5px; }
+
+.vista-previa { max-height: 260px; overflow: auto; border-radius: var(--r-s); border: 1px solid var(--borde-suave); }
+.vista-previa table { font-size: 12.5px; }
+
+/* --- Escarapelas por lotes ---------------------------------------------- */
+.rejilla-escarapelas {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  justify-items: center;
+}
+.escarapela-lote { position: relative; width: 340px; height: 600px; }
+.escarapela-lote .cara { position: absolute; inset: 0; backface-visibility: visible; }
+.escarapela-lote .cara-atras { display: none; }
+.escarapela-lote.mostrar-reverso .cara-frente { display: none; }
+.escarapela-lote.mostrar-reverso .cara-atras { display: flex; }
+
+/* --- Respaldos ----------------------------------------------------------- */
+.lista-respaldos { display: grid; gap: 8px; }
+.respaldo {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r-s);
+  border: 1px solid var(--borde-suave);
+  background: var(--panel-2);
+}
+.respaldo i { color: var(--oro); }
+.respaldo-datos { min-width: 0; }
+.respaldo-nombre { font-size: 13.5px; font-weight: 600; word-break: break-all; }
+.respaldo-meta { font-size: 12px; color: var(--tenue); }
+
+.aviso-linea {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--r-s);
+  border: 1px solid rgba(245, 158, 11, .4);
+  background: rgba(245, 158, 11, .08);
+  font-size: 13.5px;
+  color: var(--suave);
+}
+.aviso-linea i { color: var(--runas); margin-top: 2px; }
+.aviso-linea.ok { border-color: rgba(52, 211, 153, .4); background: rgba(52, 211, 153, .08); }
+.aviso-linea.ok i { color: var(--superior); }
+
+/* --- Adaptable ----------------------------------------------------------- */
+@media (max-width: 900px) {
+  .barra-tareas { flex-direction: column; align-items: stretch; }
+  .escarapela-lote { width: 300px; }
+  .rejilla-escarapelas { grid-template-columns: 1fr; }
+}

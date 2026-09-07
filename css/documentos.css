@@ -1,0 +1,567 @@
+/* ==========================================================================
+   documentos.css · Escarapela digital y boletín del guardián
+   Los dos son documentos: mantienen su aspecto en pantalla, en PNG y al
+   imprimir. El boletín siempre va claro (papel), la escarapela sigue el tema.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Escarapela
+   Todo el diseño va en "em" y el tamaño de letra se calcula a partir del alto
+   y del ancho de la tarjeta: así la misma credencial se ve completa lo mismo
+   en pantalla que en un carné CR80 de 54 x 86 mm.
+   ========================================================================== */
+.escarapela-zona {
+  display: grid;
+  gap: 22px;
+  justify-items: center;
+}
+.escenario {
+  perspective: 1400px;
+  width: 340px;
+  max-width: 100%;
+}
+.escarapela {
+  position: relative;
+  width: 340px;
+  height: 600px;
+  max-width: 100%;
+  --esc-ancho-px: 340px;
+  --esc-alto-px: 600px;
+  transform-style: preserve-3d;
+  transition: transform .75s cubic-bezier(.3, .8, .3, 1);
+  cursor: pointer;
+}
+.escarapela.girada { transform: rotateY(180deg); }
+
+.cara {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.5em;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid rgba(212, 175, 55, .5);
+  background:
+    radial-gradient(circle at 50% 6%, var(--acento-fuerte, rgba(212, 175, 55, .34)), transparent 58%),
+    linear-gradient(165deg, #101a2e, #070c17 62%, #0d1526);
+  color: #e9eefb;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, .5);
+  /* La letra crece con la tarjeta para que el contenido la llene siempre. */
+  font-size: min(calc(var(--esc-alto-px, 600px) / 38), calc(var(--esc-ancho-px, 340px) / 21));
+  line-height: 1.3;
+}
+.cara-atras { transform: rotateY(180deg); }
+/* En los pliegos del tutor no hay giro 3D: el reverso no debe salir en espejo. */
+.escarapela-lote .cara-atras { transform: none; }
+
+/* --- Cinta superior ------------------------------------------------------ */
+.esc-cinta {
+  position: relative;
+  padding: .8em 1em .7em;
+  text-align: center;
+  background: linear-gradient(135deg, #d4af37, #f0d878);
+  color: #221a05;
+  flex: none;
+}
+.esc-cinta strong {
+  display: block;
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 1.02em;
+  letter-spacing: .14em;
+  line-height: 1.15;
+}
+.esc-cinta span {
+  display: block;
+  font-size: .68em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: .2em;
+}
+
+/* --- Cuerpo -------------------------------------------------------------- */
+.esc-cuerpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5em;
+  padding: .75em 1em;
+  text-align: center;
+  min-height: 0;
+}
+/* El retrato absorbe el espacio que sobre: la credencial nunca queda vacía. */
+.esc-retrato {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 1 1 auto;
+  min-height: 4.5em;
+  max-height: 15em;
+  aspect-ratio: 1 / 1;
+  width: auto;
+}
+.esc-retrato img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; }
+.esc-halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--acento-medio, rgba(212, 175, 55, .45)), transparent 68%);
+}
+.esc-nombre {
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 1.3em;
+  line-height: 1.12;
+  width: 100%;
+}
+.esc-titulo {
+  font-size: .72em;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #e8c65a;
+  font-weight: 600;
+}
+
+.esc-datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .45em;
+  width: 100%;
+}
+.esc-dato {
+  padding: .45em .6em;
+  border-radius: .65em;
+  background: rgba(148, 178, 235, .09);
+  border: 1px solid rgba(148, 178, 235, .16);
+  text-align: left;
+  min-width: 0;
+}
+.esc-dato span {
+  display: block;
+  font-size: .58em;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #93a8cc;
+}
+.esc-dato strong {
+  display: block;
+  font-size: .86em;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.esc-dato.destacado {
+  background: rgba(212, 175, 55, .14);
+  border-color: rgba(212, 175, 55, .4);
+}
+.esc-dato.destacado strong { color: #f0d878; letter-spacing: .06em; }
+
+/* Tira de cifras y barra de progreso */
+.esc-tira { display: grid; grid-template-columns: repeat(3, 1fr); gap: .45em; width: 100%; }
+.esc-mini {
+  padding: .4em .2em;
+  border-radius: .65em;
+  background: rgba(148, 178, 235, .07);
+  border: 1px solid rgba(148, 178, 235, .14);
+}
+.esc-mini strong { display: block; font-family: "Cinzel", Georgia, serif; font-size: 1em; }
+.esc-mini span { font-size: .55em; letter-spacing: .1em; text-transform: uppercase; color: #93a8cc; }
+
+.esc-progreso { width: 100%; display: grid; gap: .25em; }
+.esc-progreso span { font-size: .55em; letter-spacing: .14em; text-transform: uppercase; color: #93a8cc; }
+.esc-progreso strong { font-size: .64em; font-weight: 500; color: #c3d0e8; }
+.esc-barra { height: .4em; border-radius: 99px; background: rgba(148, 178, 235, .18); overflow: hidden; }
+.esc-barra i {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #d4af37, #f0d878);
+}
+
+/* --- Pie ----------------------------------------------------------------- */
+.esc-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6em;
+  padding: .55em 1.05em;
+  border-top: 1px solid rgba(148, 178, 235, .18);
+  background: rgba(7, 12, 23, .55);
+  font-size: .62em;
+  color: #93a8cc;
+  flex: none;
+}
+.esc-codigo {
+  font-family: "Consolas", "Courier New", monospace;
+  letter-spacing: .16em;
+  font-size: 1.35em;
+  color: #f0d878;
+  font-weight: 700;
+}
+
+/* Código de barras decorativo (se dibuja desde el código del estudiante) */
+.esc-barras { display: flex; align-items: flex-end; justify-content: center; gap: .1em; height: 2.2em; width: 100%; }
+.esc-barras i { display: block; flex: none; background: #e9eefb; border-radius: 1px; }
+
+/* --- Reverso ------------------------------------------------------------- */
+.esc-atras-titulo {
+  font-size: .58em;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #93a8cc;
+  text-align: center;
+  width: 100%;
+}
+.esc-atras-nombre {
+  font-family: "Cinzel", Georgia, serif;
+  font-size: .95em;
+  line-height: 1.15;
+  width: 100%;
+}
+.esc-dragones { display: grid; grid-template-columns: repeat(4, 1fr); gap: .35em; width: 100%; }
+.esc-dragon {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: .55em;
+  border: 1px solid rgba(148, 178, 235, .16);
+  background: rgba(148, 178, 235, .06);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.esc-dragon img { width: 94%; height: 94%; object-fit: contain; }
+.esc-dragon.cerrado img { filter: grayscale(1) brightness(.4); }
+.esc-dragon.abierto { border-color: rgba(212, 175, 55, .55); background: rgba(212, 175, 55, .1); }
+
+.esc-recursos { display: grid; grid-template-columns: repeat(2, 1fr); gap: .35em; width: 100%; }
+.esc-recurso {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4em;
+  padding: .35em .55em;
+  border-radius: .55em;
+  background: rgba(148, 178, 235, .07);
+  border: 1px solid rgba(148, 178, 235, .14);
+  font-size: .62em;
+}
+.esc-recurso strong { font-family: "Cinzel", Georgia, serif; font-size: 1.3em; }
+.esc-firma {
+  padding: .6em 1em .7em;
+  text-align: center;
+  font-size: .6em;
+  color: #93a8cc;
+  border-top: 1px solid rgba(148, 178, 235, .18);
+  flex: none;
+}
+.esc-firma strong { display: block; color: #e9eefb; font-size: 1.15em; letter-spacing: .03em; }
+
+.escarapela-ayuda { font-size: 12.5px; color: var(--tenue); text-align: center; }
+
+/* ==========================================================================
+   2. Boletín · informe académico en hoja carta vertical
+   ========================================================================== */
+.boletin-zona { display: grid; gap: 18px; justify-items: center; }
+.boletin-hoja {
+  width: 816px;                 /* 8,5 in x 96 ppp */
+  min-height: 1056px;           /* 11 in  x 96 ppp */
+  max-width: 100%;
+  padding: 40px 46px 34px;
+  background: #ffffff;
+  color: #16233c;
+  border-radius: 6px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+  font-family: "Outfit", "Segoe UI", system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.boletin-hoja h1, .boletin-hoja h2, .boletin-hoja h3, .boletin-hoja h4 { color: #0f1a2e; }
+.bol-bloque { break-inside: avoid; page-break-inside: avoid; }
+
+/* --- Encabezado ---------------------------------------------------------- */
+.bol-cabecera {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 3px double #c8a233;
+}
+.bol-sello {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 15px;
+  font-size: 28px;
+  background: linear-gradient(145deg, #f3e6bd, #e2caa0);
+  border: 1px solid #d9be7d;
+}
+.bol-titulos h1 {
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 17px;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+.bol-titulos p { font-size: 10.5px; color: #5b6b88; }
+.bol-titulos h2 {
+  font-size: 13px;
+  margin-top: 4px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #7a5b12;
+}
+.bol-area { font-size: 10px; color: #7788a5; }
+.bol-area em { color: #7a5b12; font-style: italic; }
+.bol-periodo {
+  text-align: center;
+  min-width: 74px;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f3;
+  border-radius: 10px;
+  background: #f7f9fd;
+  font-size: 9.5px;
+  color: #5b6b88;
+  line-height: 1.3;
+}
+.bol-periodo strong {
+  display: block;
+  font-family: "Outfit", "Segoe UI", system-ui, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+  color: #16233c;
+}
+.bol-periodo span { display: block; }
+
+/* --- Identificación ------------------------------------------------------ */
+.bol-identidad {
+  display: grid;
+  grid-template-columns: 78px 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+.bol-avatar {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #f2f5fa;
+  border: 1px solid #e2e8f3;
+}
+table.bol-datos { width: 100%; border-collapse: collapse; font-size: 11px; }
+table.bol-datos th, table.bol-datos td {
+  border: 1px solid #e2e8f3;
+  padding: 5px 8px;
+  text-align: left;
+}
+table.bol-datos { table-layout: fixed; }
+table.bol-datos th {
+  background: #f4f7fc;
+  font-size: 8.5px;
+  line-height: 1.25;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #5b6b88;
+  font-weight: 600;
+  width: 17%;
+}
+/* Dos columnas de etiqueta y dos de valor, con sitio para nombres largos. */
+table.bol-datos td { width: 33%; overflow-wrap: anywhere; }
+.bol-nota-global {
+  text-align: center;
+  min-width: 108px;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f3;
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+.bol-nota-valor { font-family: "Cinzel", Georgia, serif; font-size: 32px; line-height: 1; }
+.bol-nota-etq {
+  font-size: 8.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #5b6b88;
+  margin-top: 4px;
+}
+.bol-nota-global .bol-marca { margin-top: 5px; }
+
+/* --- Secciones ----------------------------------------------------------- */
+.bol-seccion-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #7a5b12;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #e6ebf4;
+}
+.bol-subtitulo {
+  font-size: 9.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #7788a5;
+  margin: 8px 0 4px;
+}
+.bol-pie-nota { font-size: 10px; color: #5b6b88; margin-top: 6px; }
+.bol-concepto {
+  font-size: 11px;
+  padding: 8px 10px;
+  border-left: 3px solid #c8a233;
+  background: #fbf7ec;
+  border-radius: 0 6px 6px 0;
+}
+
+/* --- Escala -------------------------------------------------------------- */
+.bol-escala { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.bol-escala-item {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid currentColor;
+  text-align: center;
+}
+.bol-escala-item strong { display: block; font-size: 10.5px; letter-spacing: .08em; }
+.bol-escala-item span { font-size: 10px; opacity: .85; }
+
+/* --- Tablas -------------------------------------------------------------- */
+table.bol-tabla { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+table.bol-tabla th, table.bol-tabla td {
+  padding: 5px 7px;
+  border: 1px solid #e6ebf4;
+  text-align: left;
+  vertical-align: middle;
+}
+table.bol-tabla thead th {
+  background: #f2f5fa;
+  font-size: 9px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #5b6b88;
+  border-bottom: 1px solid #d8e0ee;
+  line-height: 1.25;
+}
+table.bol-tabla thead th small {
+  display: block;
+  font-size: 8px;
+  font-weight: 400;
+  color: #97a3b8;
+  text-transform: none;
+  letter-spacing: 0;
+}
+table.bol-tabla td.num, table.bol-tabla th.num { text-align: center; font-variant-numeric: tabular-nums; }
+table.bol-tabla tr.sin-registro td { color: #97a3b8; font-style: italic; }
+table.bol-tabla tr { break-inside: avoid; page-break-inside: avoid; }
+.bol-mision-titulo strong { display: block; font-size: 11px; overflow-wrap: anywhere; }
+table.bol-tabla td:nth-child(2) { overflow-wrap: anywhere; }
+.bol-mision-titulo span { font-size: 9.5px; color: #7788a5; }
+
+tr.bol-fila-periodo td {
+  background: #f4f7fc;
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #7a5b12;
+}
+tr.bol-fila-subtotal td { background: #fbfcfe; font-size: 10px; color: #5b6b88; }
+tr.bol-fila-total td { background: #f7f2e2; font-size: 11px; }
+table.bol-observaciones { table-layout: fixed; }
+table.bol-observaciones td { font-size: 10.5px; overflow-wrap: anywhere; }
+table.bol-observaciones td:first-child { width: 28px; }
+table.bol-observaciones td:nth-child(2) { width: 170px; }
+table.bol-observaciones td:last-child { width: 48px; }
+
+.bol-marca { display: inline-block; padding: 1px 7px; border-radius: 99px; font-size: 9px; font-weight: 700; }
+.bol-superior { background: #dcfce7; color: #15803d; }
+.bol-alto     { background: #dbeafe; color: #1d4ed8; }
+.bol-basico   { background: #fef3c7; color: #b45309; }
+.bol-bajo     { background: #fee2e2; color: #b91c1c; }
+.bol-sin-datos{ background: #eef2f7; color: #64748b; }
+.bol-escala-item.bol-superior { color: #15803d; background: #f2fbf5; }
+.bol-escala-item.bol-alto     { color: #1d4ed8; background: #f2f6fe; }
+.bol-escala-item.bol-basico   { color: #b45309; background: #fefaf1; }
+.bol-escala-item.bol-bajo     { color: #b91c1c; background: #fef5f5; }
+
+/* --- Progreso en el proyecto --------------------------------------------- */
+.bol-progreso { display: grid; grid-template-columns: 1fr 1.15fr; gap: 12px; align-items: start; }
+.bol-progreso-derecha { display: grid; gap: 4px; }
+.bol-progreso .bol-recursos { grid-template-columns: repeat(2, 1fr); }
+
+/* --- Columnas cualitativas ----------------------------------------------- */
+.bol-columnas { display: grid; grid-template-columns: 1.1fr 1fr; gap: 14px; align-items: start; }
+.bol-caja { padding: 11px 13px; border-radius: 10px; border: 1px solid #e2e8f3; background: #fbfcfe; }
+.bol-caja h4 { font-family: "Cinzel", Georgia, serif; font-size: 11.5px; letter-spacing: .05em; }
+.bol-lista { display: grid; gap: 5px; font-size: 10.5px; }
+.bol-lista li { display: flex; gap: 7px; }
+.bol-lista li::before { content: "◆"; color: #c8a233; font-size: 8px; line-height: 1.8; }
+
+.bol-recursos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+.bol-recurso { padding: 7px 9px; border-radius: 8px; border: 1px solid #e2e8f3; background: #fff; }
+.bol-recurso span { font-size: 8.5px; letter-spacing: .07em; text-transform: uppercase; color: #7788a5; }
+.bol-recurso strong { display: block; font-family: "Cinzel", Georgia, serif; font-size: 16px; }
+.bol-recurso small { font-size: 9.5px; color: #5b6b88; }
+
+.bol-dragones { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-top: 8px; }
+.bol-dragon { text-align: center; }
+.bol-dragon img { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 6px; background: #f2f5fa; }
+.bol-dragon.cerrado img { filter: grayscale(1) opacity(.35); }
+.bol-dragon span { display: block; font-size: 7.5px; color: #5b6b88; margin-top: 1px; }
+
+.bol-barra { height: 7px; border-radius: 99px; background: #e8edf6; overflow: hidden; }
+.bol-barra i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #c8a233, #e6cd7a); }
+
+/* --- Firmas y pie -------------------------------------------------------- */
+.bol-firmas {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding-top: 26px;
+  break-inside: avoid;
+}
+.bol-firma { text-align: center; font-size: 10px; color: #5b6b88; }
+.bol-firma hr { border: 0; border-top: 1px solid #9aa8bf; margin-bottom: 4px; }
+.bol-pie {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 9px;
+  color: #8896ac;
+  border-top: 1px solid #e6ebf4;
+  padding-top: 6px;
+}
+
+/* En pantallas pequeñas la hoja se escala para caber sin scroll horizontal. */
+.boletin-marco { width: 100%; overflow-x: auto; display: grid; justify-items: center; }
+@media (max-width: 900px) {
+  .boletin-hoja { padding: 24px 20px; min-height: 0; }
+  .bol-progreso { grid-template-columns: 1fr; }
+  .bol-columnas { grid-template-columns: 1fr; }
+  .bol-escala { grid-template-columns: repeat(2, 1fr); }
+  .bol-recursos { grid-template-columns: repeat(2, 1fr); }
+  .bol-dragones { grid-template-columns: repeat(4, 1fr); }
+  .bol-identidad { grid-template-columns: 64px 1fr; }
+  .bol-avatar { width: 64px; height: 64px; }
+  .bol-nota-global { grid-column: 1 / -1; }
+  .bol-cabecera { grid-template-columns: auto 1fr; }
+  .bol-periodo { grid-column: 1 / -1; display: flex; gap: 8px; justify-content: center; align-items: baseline; }
+  .bol-periodo strong { display: inline; font-size: 15px; }
+  table.bol-datos th { width: auto; }
+  .escarapela, .escenario { width: 300px; }
+  .escarapela { height: 600px; }
+}

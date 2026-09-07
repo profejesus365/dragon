@@ -1,0 +1,46 @@
+ACADEMIA DE DRAGONES · carpeta lista para subir a internet
+==========================================================
+Generado: 2026-09-06 21:49
+Origen:   data/base.json
+
+QUÉ HAY AQUÍ
+------------
+Este es el sitio completo, ya con los datos del curso incluidos. No necesita
+Python, ni base de datos, ni instalación: es HTML, CSS, JavaScript e imágenes.
+
+  index.html          la página (arranca aquí)
+  css/ js/ assets/    diseño, lógica y los 12 dragones
+  data/datos.js       los datos del curso (32 estudiantes)
+  data/avisos.js      el tablón de avisos (se puede editar con el Bloc de notas)
+  robots.txt          pide a los buscadores no indexar el sitio
+  htaccess.ejemplo    plantilla para proteger la carpeta con contraseña
+
+CÓMO SUBIRLO
+------------
+1. Entra al panel de tu hosting (cPanel, Hostinger, Netlify, GitHub Pages…).
+2. Sube TODO el contenido de esta carpeta a la carpeta pública del sitio
+   (suele llamarse public_html, www o htdocs). Sube los archivos, no la carpeta.
+3. Abre tu dominio: debe verse la portada de la Academia.
+
+También sirve para una intranet: copia esta carpeta en el servidor del colegio,
+o incluso en una memoria USB (index.html abre con doble clic).
+
+ANTES DE PUBLICARLO, TEN EN CUENTA
+----------------------------------
+* El archivo data/datos.js lleva los nombres de los estudiantes y sus notas.
+  Cualquiera que conozca la dirección puede descargarlo. Para reducir el riesgo:
+    - protege la carpeta con contraseña (renombra htaccess.ejemplo a .htaccess
+      en servidores Apache y crea su archivo .htpasswd), o
+    - publícalo en la intranet del colegio en vez de en internet abierto, o
+    - genera esta carpeta con  --sin-notas  (solo la lista, sin calificaciones).
+* El código del Tutor de Dragones viaja dentro del JavaScript: sirve para que un
+  estudiante no entre por curiosidad, pero no es una contraseña real.
+* En el sitio publicado no hay servidor: si el Tutor cambia algo allí, se guarda
+  únicamente en el navegador que use. La base oficial sigue siendo la de tu
+  computador (data/base.json). Cuando actualices notas, vuelve a ejecutar
+  «Publicar sitio.bat» y sube de nuevo la carpeta.
+
+ACTUALIZAR EL SITIO PUBLICADO
+-----------------------------
+    python herramientas/publicar.py         (o doble clic en «Publicar sitio.bat»)
+y sube otra vez el contenido de la carpeta publicar/.

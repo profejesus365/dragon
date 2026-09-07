@@ -1,0 +1,122 @@
+/* ==========================================================================
+   imprimir.css · Hoja de impresión
+   Papel carta vertical. Al imprimir se conserva solo el documento marcado con
+   .zona-impresion (boletín, escarapelas o ranking); el resto del sitio
+   desaparece.
+   ========================================================================== */
+
+@page { size: letter portrait; margin: 12mm; }
+
+html, body { background: #fff !important; }
+body { overflow: visible !important; }
+body::before { display: none !important; }
+
+.lateral,
+.cabecera,
+.nav-movil,
+.tostadas,
+.modal,
+.velo,
+.tarjeta-acciones,
+.filtros,
+.barra-tareas,
+.escarapela-ayuda,
+.pantalla-carga { display: none !important; }
+
+.app { display: block !important; }
+.vista { padding: 0 !important; gap: 0 !important; display: block !important; }
+
+/* Todo lo que no sea el documento a imprimir se oculta. */
+body.imprimiendo .vista > *:not(.zona-impresion) { display: none !important; }
+body.imprimiendo .zona-impresion,
+body.imprimiendo .zona-impresion .tarjeta {
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+body.imprimiendo .tarjeta-cabecera { display: none !important; }
+
+/* --- Boletín ------------------------------------------------------------- */
+.boletin-marco { overflow: visible !important; display: block !important; }
+.boletin-hoja {
+  width: 100% !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  color: #16233c !important;
+  background: #fff !important;
+}
+.bol-tabla thead { display: table-header-group; }
+.bol-tabla tr, .bol-bloque, .bol-identidad, .bol-cabecera, .bol-firmas {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.bol-firmas { margin-top: 16mm !important; }
+
+/* --- Escarapelas --------------------------------------------------------- */
+/* Una sola credencial (panel del estudiante): las dos caras en la misma hoja. */
+.escenario { perspective: none !important; }
+.escarapela {
+  transform: none !important;
+  height: auto !important;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8mm;
+  width: 100% !important;
+}
+.escarapela {
+  /* La tipografía de la credencial se calcula con estas medidas. */
+  --esc-ancho-px: 86mm !important;
+  --esc-alto-px: 160mm !important;
+}
+.escarapela .cara {
+  position: static !important;
+  transform: none !important;
+  backface-visibility: visible !important;
+  width: 86mm;
+  height: 160mm;
+  break-inside: avoid;
+  box-shadow: none !important;
+  border: 1px solid #b9a25a !important;
+}
+
+/* Lotes del panel del tutor: tamaño real de escarapela, varias por hoja. */
+.rejilla-escarapelas {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 4mm !important;
+  justify-content: flex-start;
+}
+.escarapela-lote {
+  position: relative;
+  width: var(--esc-ancho, 86mm) !important;
+  height: var(--esc-alto, 120mm) !important;
+  /* Al pasar de píxeles a milímetros, la letra se recalcula sola. */
+  --esc-ancho-px: var(--esc-ancho, 86mm) !important;
+  --esc-alto-px: var(--esc-alto, 120mm) !important;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.escarapela-lote .cara {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+/* --- Tablas (ranking, informes) ------------------------------------------ */
+.tabla-envoltorio { overflow: visible !important; border: 0 !important; }
+table.tabla { min-width: 0 !important; font-size: 9.5pt; color: #16233c !important; }
+table.tabla thead { display: table-header-group; }
+table.tabla thead th { background: #f2f5fa !important; color: #43526e !important; }
+table.tabla tbody tr { break-inside: avoid; border-bottom: 1px solid #e6ebf4 !important; }
+table.tabla .fila-yo { background: #fbf3d8 !important; box-shadow: none !important; }
+.podio { break-inside: avoid; }
+
+* { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
